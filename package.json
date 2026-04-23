@@ -19,11 +19,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/RMNCLDYO/bun-react-effect-example.git"
+    "url": "https://github.com/ramonclaudio/bun-react-effect-example.git"
   },
-  "homepage": "https://github.com/RMNCLDYO/bun-react-effect-example#readme",
+  "homepage": "https://github.com/ramonclaudio/bun-react-effect-example#readme",
   "bugs": {
-    "url": "https://github.com/RMNCLDYO/bun-react-effect-example/issues"
+    "url": "https://github.com/ramonclaudio/bun-react-effect-example/issues"
   },
   "scripts": {
     "dev": "bun --hot src/index.ts",

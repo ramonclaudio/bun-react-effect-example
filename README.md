@@ -1,76 +1,48 @@
-# Bun + React + Effect Example
+# bun-react-effect-example
 
-![Bun + React + Effect Example - Full-stack application showcasing end-to-end type safety with Effect TypeScript, React 19, and Bun runtime](src/promo.png)
+![Bun + React + Effect Example](src/promo.png)
 
-**The `bun init` React + shadcn/ui starter, made 100% type-safe with Effect TypeScript.**
+I wanted to see what end-to-end type safety actually looks like in a small app if you commit to Effect all the way through. Started with `bun init` React + shadcn/ui, replaced every try/catch and runtime check with Effect's typed error channels, tagged errors, and Schema validation. Zero `any` types, zero type assertions, zero runtime type errors.
 
-This demonstrates **END-TO-END TYPE SAFETY** using Effect for runtime validation, typed error channels, and exhaustive pattern matching. Built with Bun runtime, React 19, Tailwind CSS v4, and shadcn/ui for reusable components.
-
-> [!IMPORTANT]
-> Zero runtime type errors guaranteed through Effect's typed error channels, Schema validation, and compile-time exhaustive error handling.
+The `bun init` React + shadcn/ui starter, made type-safe end-to-end with Effect TypeScript.
 
 ## Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Runtime** | Bun |
-| **Frontend** | React 19, Tailwind CSS v4, shadcn/ui |
-| **Backend** | Bun.serve with Effect-based handlers |
-| **Validation** | Effect Schema with runtime type checking |
-| **Build** | Bun.build with Effect error handling |
+| Layer | Tech |
+| --- | --- |
+| Runtime | Bun |
+| Frontend | React 19, Tailwind CSS v4, shadcn/ui |
+| Backend | `Bun.serve` with Effect-based handlers |
+| Validation | Effect Schema (runtime type checking) |
+| Build | `Bun.build` with Effect error handling |
 
 ## Commands
 
 ```bash
-bun install    # Install dependencies
-bun dev        # Development server with HMR
-bun start      # Production server
-bun build      # Build for production (supports CLI args)
+bun install    # install dependencies
+bun dev        # development server with HMR
+bun start      # production server
+bun build      # production build (supports CLI args)
 ```
 
 ## Structure
 
 ```
 src/
-├── index.ts        # Server entry with typed Effect handlers
-├── App.tsx         # React root component
+├── index.ts        # server entry with typed Effect handlers
+├── App.tsx         # React root
 ├── APITester.tsx   # API test UI with Schema validation
-├── frontend.tsx    # React entry with HMR support
+├── frontend.tsx    # React entry with HMR
 ├── lib/
-│   ├── errors.ts   # Tagged errors (ValidationError, HttpError, etc.)
-│   └── utils.ts    # Utility functions (cn)
+│   ├── errors.ts   # tagged errors (ValidationError, HttpError, etc.)
+│   └── utils.ts    # utilities (cn)
 └── components/ui/  # shadcn/ui components
-build.ts            # Production build with Effect + CLI args
+build.ts            # production build with Effect + CLI args
 ```
 
-## Architecture
+## Type safety patterns
 
-```mermaid
-graph LR
-    A[React Frontend] -->|HTTP Request| B[Bun.serve]
-    B -->|Route Handler| C[Effect Handler]
-    C -->|Schema Validation| D{Valid?}
-    D -->|Yes| E[Effect.succeed]
-    D -->|No| F[ValidationError]
-    E -->|JSON Response| A
-    F -->|catchTag| G[Error Response]
-    G -->|JSON Response| A
-```
-
-## Type Safety
-
-> [!NOTE]
-> Every value is explicitly typed with zero `any` types or type assertions in the entire codebase.
-
-### Zero Runtime Type Errors
-
-- **No `any` types** - every value explicitly typed
-- **No type assertions** - Effect Schema validates at runtime
-- **Tagged errors** - `Data.TaggedError` for exhaustive pattern matching
-- **Typed error channels** - `Effect.Effect<Success, Error>` with explicit error types
-
-<details>
-<summary>Example: Type-safe error handling</summary>
+### Tagged errors
 
 ```typescript
 const getHelloByName = (name: string): Effect.Effect<HelloByNameResponse, ValidationError> =>
@@ -85,21 +57,22 @@ const getHelloByName = (name: string): Effect.Effect<HelloByNameResponse, Valida
   });
 ```
 
-The error type is enforced at compile time. Handlers must use `Effect.catchTag("ValidationError", ...)` to recover.
+Error type is enforced at compile time. Handlers must `Effect.catchTag("ValidationError", ...)` to recover.
 
-</details>
-
-### Frontend Validation
+### Frontend validation
 
 - API responses validated with `Schema.Struct` and `Schema.Union`
-- `Effect.catchTag` enables type-safe error recovery by error tag
-- Form inputs validated before API calls with `Schema.decodeUnknownEither`
+- `Effect.catchTag` for type-safe error recovery by tag
+- Form inputs validated with `Schema.decodeUnknownEither` before API calls
 
-### Build System
-
-> [!TIP]
-> Run `bun build --help` to see all available CLI options for the Effect-based build script.
+### Build system
 
 - Effect-based build script with tagged error types (`CleanError`, `BuildError`)
 - CLI argument parsing with automatic type coercion
-- Resource cleanup with `Effect.acquireRelease`
+- Resource cleanup via `Effect.acquireRelease`
+
+Run `bun build --help` for all CLI options.
+
+## License
+
+MIT
